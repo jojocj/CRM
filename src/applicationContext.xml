@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx.xsd">
+    
+    <!-- 先配置c3p0连接池 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    	<property name="driverClass" value="com.mysql.jdbc.Driver"/>
+    	<property name="jdbcUrl" value="jdbc:mysql:///_CRM"/>
+		<property name="user" value="root"/>
+		<property name="password" value="123456"/>
+    </bean>
+    
+    <!-- LocalSessionFactoryBean加载配置文件  -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+    	<!-- 先加载连接池 -->
+		<property name="dataSource" ref="dataSource"/>
+		<!-- 加载方言和可选项 -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+		
+		<!-- 映入映射的配置文件 -->
+		<property name="mappingResources">
+			<list>
+				<value>com/vicky/bean/User.hbm.xml</value>
+				<value>com/vicky/bean/Customer.hbm.xml</value>
+				<value>com/vicky/bean/Dict.hbm.xml</value>
+				<value>com/vicky/bean/SaleVisit.hbm.xml</value>
+				<value>com/vicky/bean/Linkman.hbm.xml</value>
+			</list>
+		</property>
+		
+    </bean>
+    <!-- 配置平台事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+    	<property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+    <!-- 开启事务注解扫描 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!-- 用户 -->
+    <!-- web -->
+    <bean id="userAction" class="com.vicky.web.UserAction" scope="prototype">
+    	<property name="userService" ref="userService"/>
+    </bean>
+    <!-- service -->
+    <bean id="userService" class="com.vicky.service.UserServiceImpl">
+    	<property name="userDao" ref="userDao"/>
+    </bean>
+    <!-- dao -->
+    <bean id="userDao" class="com.vicky.dao.UserDaoImpl">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+   
+   <!-- 客户 -->
+   <!-- web -->
+   <bean id="customerAction" class="com.vicky.web.CustomerAction" scope="prototype">
+    	<property name="customerService" ref="customerService"/>
+    </bean>
+    <!-- service -->
+    <bean id="customerService" class="com.vicky.service.CustomerServiceImpl">
+    	<property name="customerDao" ref="customerDao"/>
+    </bean>
+    <!-- dao -->
+    <bean id="customerDao" class="com.vicky.dao.CustomerDaoImpl">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <!-- 数据字典 -->
+    <!-- web -->
+   <bean id="dictAction" class="com.vicky.web.DictAction" scope="prototype">
+    	<property name="dictService" ref="dictService"/>
+    </bean>
+    <!-- service -->
+    <bean id="dictService" class="com.vicky.service.DictServiceImpl">
+    	<property name="dictDao" ref="dictDao"/>
+    </bean>
+    <!-- dao -->
+    <bean id="dictDao" class="com.vicky.dao.DictDaoImpl">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <!-- 联系人 -->
+    <!-- web -->
+   <bean id="linkmanAction" class="com.vicky.web.LinkmanAction" scope="prototype">
+    	<property name="linkmanService" ref="linkmanService"/>
+    </bean>
+    <!-- service -->
+    <bean id="linkmanService" class="com.vicky.service.LinkmanServiceImpl">
+    	<property name="linkmanDao" ref="linkmanDao"/>
+    </bean>
+    <!-- dao -->
+    <bean id="linkmanDao" class="com.vicky.dao.LinkmanDaoImpl">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <!-- 客户拜访 -->
+    <!-- web -->
+   <bean id="visitAction" class="com.vicky.web.SaleVisitAction" scope="prototype">
+    	<property name="saleVisitService" ref="saleVisitService"/>
+    </bean>
+    <!-- service -->
+    <bean id="saleVisitService" class="com.vicky.service.SaleVisitServiceImpl">
+    	<property name="saleVisitDao" ref="saleVisitDao"/>
+    </bean>
+    <!-- dao -->
+    <bean id="saleVisitDao" class="com.vicky.dao.SaleVisitDaoImpl">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+</beans>

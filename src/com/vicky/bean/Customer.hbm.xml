@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+    <hibernate-mapping>
+    	<class name="com.vicky.bean.Customer" table="cst_customer" >
+    		<id name="cust_id" length="32">
+    			<generator class="native"/>
+    		
+    		</id>
+    		<property name="cust_name" length="32" not-null="true"/>
+    		<property name="cust_user_id" length="32" />
+    		<property name="cust_create_id" length="32" />
+    		<property name="cust_linkman" length="64" />  
+    		<property name="cust_phone" length="64" />  
+    		<property name="cust_mobile" length="16" />  
+    		<property name="filePath" length="225" /> 
+    		<many-to-one name="industry" class="com.vicky.bean.Dict" column="cust_industry" fetch="join"/>
+    		<many-to-one name="source" class="com.vicky.bean.Dict" column="cust_source" fetch="join"/> 
+    		<many-to-one name="level" class="com.vicky.bean.Dict" column="cust_level" fetch="join"/>  		
+    		
+    		<set name="saleVisits" cascade="delete">
+    			<key column="visit_cust_id"/>
+    			<one-to-many class="com.vicky.bean.SaleVisit"/>
+    		</set>
+    		<set name="linkmans" cascade="delete">
+    			<key column="lkm_cust_id"/>
+    			<one-to-many class="com.vicky.bean.Linkman"/>
+    		</set>
+    	
+    	</class>
+    
+    </hibernate-mapping>

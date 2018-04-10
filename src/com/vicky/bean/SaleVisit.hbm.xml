@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+    <hibernate-mapping>
+    	<class name="com.vicky.bean.SaleVisit" table="sale_visit" >
+    		<id name="visit_id" length="32">
+    			<generator class="uuid"/>
+    		
+    		</id>
+    		<property name="visit_time" length="32" />
+    		<property name="visit_interviewee" length="32" />
+    		<property name="visit_addr" length="128" />
+    		<property name="visit_detail" length="256" />  
+    		<property name="visit_nexttime" length="32" />  
+
+    		<many-to-one name="customer" class="com.vicky.bean.Customer" column="visit_cust_id" fetch="join"/>
+    		<many-to-one name="user" class="com.vicky.bean.User" column="visit_user_id" fetch="join"/>
+    		</class>
+    
+    </hibernate-mapping>
